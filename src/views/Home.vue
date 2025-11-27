@@ -1,7 +1,7 @@
 <template>
   <!-- Full gradient background + hiệu ứng kính mờ -->
   <div class="min-vh-100 position-relative overflow-hidden"
-       style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+       style="background: #f0f2f5;">
 
     <!-- Blob trang trí -->
     <div class="position-absolute top-50 start-50 translate-middle blob opacity-20"></div>
@@ -9,15 +9,6 @@
 
     <div class="container py-5 position-relative z-1">
 
-      <!-- Header chào mừng -->
-      <div class="text-center text-white mb-5 pt-5">
-        <div class="d-inline-flex align-items-center justify-content-center rounded-4 shadow-lg mb-4"
-             style="width: 100px; height: 100px; background: rgba(255,255,255,0.15); backdrop-filter: blur(12px); font-size: 42px; font-weight: 800;">
-          VN
-        </div>
-        <h1 class="display-3 fw-bold mb-3">Blog Của Tôi</h1>
-        <p class="lead fs-4 opacity-90">Nơi những câu chuyện hay được kể</p>
-      </div>
 
       <!-- Khi chưa có bài viết -->
       <div v-if="posts.length === 0" class="text-center py-5 mt-5">
@@ -92,7 +83,7 @@
     </div>
 
     <!-- Footer nhỏ -->
-    <p class="text-center text-white mt-4 opacity-75 small">
+    <p class="text-center text-black mt-4 opacity-75 small">
             © 2025 Blog Của Tôi • Made with Đỗ Văn Nghĩa ❤️
           </p>
   </div>
