@@ -9,7 +9,7 @@
              style="width: 48px; height: 48px; background: linear-gradient(135deg, #667eea, #764ba2); font-size: 20px;">
           VN
         </div>
-        <span class="d-none d-md-block fs-4">Blog Của Tôi</span>
+        <span class="d-none d-md-block fs-4">Blog của tôi</span>
       </router-link>
 
       <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
