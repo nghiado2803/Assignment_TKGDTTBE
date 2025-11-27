@@ -1,88 +1,115 @@
 <template>
-  <div class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="card shadow-lg border-0">
-          <div class="card-body p-5">
-            <h2 class="mb-4 text-primary fw-bold">Chỉnh sửa bài viết</h2>
+  <div class="min-vh-100" style="background: #f0f2f5;">
+    <div class="container py-4">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
 
-            <!-- Đang tải -->
-            <div v-if="!post" class="text-center py-5">
-              <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;">
-                <span class="visually-hidden">Đang tải...</span>
-              </div>
-              <p class="mt-3 text-muted">Đang tải bài viết...</p>
+          <!-- Card kiểu Facebook -->
+          <div class="bg-white rounded-3 shadow-sm border-0 overflow-hidden">
+            
+            <!-- Header -->
+            <div class="bg-primary text-white px-4 py-3">
+              <h5 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                <i class="bi bi-pencil-square"></i>
+                Chỉnh sửa bài viết
+              </h5>
             </div>
 
-            <!-- Form chỉnh sửa (giống CreatePost) -->
-            <form v-else @submit.prevent="handleSubmit">
-              <!-- Tiêu đề -->
-              <div class="mb-4">
-                <input
-                  v-model="form.title"
-                  type="text"
-                  class="form-control form-control-lg"
-                  placeholder="Tiêu đề bài viết..."
-                  required
-                />
+            <div class="p-4">
+
+              <!-- Loading -->
+              <div v-if="!post" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
               </div>
 
-              <!-- Nội dung -->
-              <div class="mb-4">
-                <textarea
-                  v-model="form.content"
-                  class="form-control"
-                  rows="8"
-                  placeholder="Nội dung bài viết..."
-                  required
-                ></textarea>
-              </div>
+              <!-- Form kiểu Facebook -->
+              <form v-else @submit.prevent="handleSubmit">
 
-              <!-- Ảnh hiện tại + Upload mới -->
-              <div class="mb-4">
-                <label class="form-label fw-bold">Ảnh bài viết</label>
+                <!-- Tiêu đề -->
+                <div class="mb-3">
+                  <input
+                    v-model="form.title"
+                    type="text"
+                    class="form-control form-control-lg border-0 shadow-none fs-5 fw-medium"
+                    placeholder="Tiêu đề bài viết..."
+                    style="border-bottom: 1px solid #ddd !important; border-radius: 0; padding-left: 0;"
+                    required
+                  />
+                </div>
 
-                <!-- Hiển thị ảnh hiện tại hoặc ảnh mới chọn -->
-                <div v-if="previewImage || post.image" class="text-center mb-3">
+                <!-- Nội dung -->
+                <div class="mb-4">
+                  <textarea
+                    v-model="form.content"
+                    class="form-control border-0 shadow-none"
+                    rows="6"
+                    placeholder="Bạn đang nghĩ gì?"
+                    style="resize: none; font-size: 1.1rem; line-height: 1.5;"
+                    required
+                  ></textarea>
+                </div>
+
+                <!-- Ảnh preview -->
+                <div v-if="previewImage || post.image" class="mb-3 position-relative">
                   <img
                     :src="previewImage || post.image"
-                    class="img-preview rounded"
+                    class="w-100 rounded-3"
+                    style="max-height: 500px; object-fit: cover;"
                     alt="Ảnh bài viết"
                   />
-                  <button @click.prevent="removeImage" class="btn btn-sm btn-danger mt-2">
-                    Xóa ảnh
+                  <button
+                    @click.prevent="removeImage"
+                    class="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0 m-3 shadow"
+                    style="width: 36px; height: 36px;"
+                  >
+                    <i class="bi bi-x-lg"></i>
                   </button>
                 </div>
 
-                <!-- Input chọn file -->
-                <input
-                  type="file"
-                  accept="image/*"
-                  class="form-control"
-                  @change="handleFileChange"
-                  ref="fileInput"
-                />
-                <small class="text-muted">Chọn ảnh mới (để trống nếu giữ ảnh cũ)</small>
-              </div>
+                <!-- Nút chọn ảnh - kiểu Facebook -->
+                <div class="mb-4">
+                  <label class="d-block bg-light border border-2 border-dashed rounded-3 p-4 text-center cursor-pointer hover-bg-gray"
+                         style="transition: all 0.2s;">
+                    <i class="bi bi-image text-success fs-1 mb-2 d-block"></i>
+                    <span class="fw-medium text-muted">Thêm ảnh</span>
+                    <small class="d-block text-muted">JPG, PNG, GIF • Tối đa 5MB</small>
+                    <input type="file" accept="image/*" @change="handleFileChange" class="d-none" />
+                  </label>
+                  <div class="text-center mt-2">
+                    <small class="text-muted">Để trống nếu muốn giữ ảnh cũ</small>
+                  </div>
+                </div>
 
-              <!-- Nút hành động -->
-              <div class="d-flex gap-3">
-                <button
-                  type="submit"
-                  class="btn btn-primary btn-lg flex-grow-1"
-                  :disabled="isLoading"
-                >
-                  {{ isLoading ? 'Đang cập nhật...' : 'Cập nhật bài viết' }}
-                </button>
-                <button @click.prevent="handleCancel" class="btn btn-outline-secondary btn-lg">
-                  Hủy
-                </button>
-              </div>
-            </form>
+                <!-- Nút hành động -->
+                <div class="d-flex gap-2">
+                  <button
+                    type="submit"
+                    class="btn btn-primary flex-grow-1 fw-bold py-2 rounded-3"
+                    :disabled="isLoading"
+                  >
+                    <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ isLoading ? 'Đang cập nhật...' : 'Cập nhật bài viết' }}
+                  </button>
+                  <button
+                    @click.prevent="handleCancel"
+                    class="btn btn-light border px-4 fw-medium rounded-3"
+                  >
+                    Hủy
+                  </button>
+                </div>
+
+              </form>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
+    <p class="text-center text-black mt-4 opacity-75 small">
+            © 2025 Blog Của Tôi • Made with Đỗ Văn Nghĩa ❤️
+          </p>
   </div>
 </template>
 
@@ -90,7 +117,6 @@
 import { ref, inject, onMounted, type Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-// Inject đúng cách
 const allData = inject<Ref<any[]>>('allData')!
 const showToast = inject<(msg: string, type?: 'success' | 'error' | 'warning') => void>('showToast')!
 const currentUser = inject<Ref<any>>('currentUser')?.value
@@ -100,7 +126,7 @@ const router = useRouter()
 
 const post = ref<any>(null)
 const form = ref({ title: '', content: '', image: '' })
-const previewImage = ref<string>('') // ảnh mới chọn
+const previewImage = ref<string>('')
 const isLoading = ref(false)
 
 onMounted(() => {
@@ -127,49 +153,39 @@ onMounted(() => {
   }
 })
 
-// Xử lý chọn file mới
 function handleFileChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
-
-  if (!file.type.startsWith('image/')) {
-    showToast('Vui lòng chọn file ảnh!', 'error')
-    return
-  }
-  if (file.size > 5 * 1024 * 1024) {
-    showToast('Ảnh quá lớn! Tối đa 5MB', 'error')
-    return
-  }
+  if (!file.type.startsWith('image/')) return showToast('Chỉ chọn file ảnh!', 'error')
+  if (file.size > 5 * 1024 * 1024) return showToast('Ảnh quá lớn!', 'error')
 
   const reader = new FileReader()
   reader.onload = (ev) => {
     const result = ev.target?.result as string
     previewImage.value = result
-    form.value.image = result // lưu ảnh mới
+    form.value.image = result
   }
   reader.readAsDataURL(file)
 }
 
-// Xóa ảnh (trở về không có ảnh)
 function removeImage() {
   previewImage.value = ''
   form.value.image = ''
-  ;(document.querySelector('input[type="file"]') as HTMLInputElement).value = ''
+  const input = document.querySelector('input[type="file"]') as HTMLInputElement
+  if (input) input.value = ''
 }
 
 function handleSubmit() {
   if (!post.value) return
-
   isLoading.value = true
 
   setTimeout(() => {
     Object.assign(post.value, {
       title: form.value.title.trim(),
       content: form.value.content.trim(),
-      image: previewImage.value || post.value.image || '', // giữ ảnh cũ nếu không đổi
+      image: previewImage.value || post.value.image || '',
       updatedAt: new Date().toISOString()
     })
-
     showToast('Cập nhật bài viết thành công!', 'success')
     isLoading.value = false
     router.push('/home')
@@ -182,22 +198,23 @@ function handleCancel() {
 </script>
 
 <style scoped>
-.img-preview {
-  max-width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+/* Diệt sạch mọi viền xanh + outline */
+input:focus,
+textarea:focus,
+*:focus,
+*:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
 }
-textarea.form-control {
-  resize: vertical;
-  font-size: 1.1rem;
+
+/* Hover nhẹ cho nút chọn ảnh */
+.hover-bg-gray:hover {
+  background-color: #e4e6eb !important;
 }
-.btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-}
-.btn-primary:hover {
-  background: linear-gradient(135deg, #5568d3 0%, #63408b 100%);
+
+/* Background Facebook */
+body {
+  background: #f0f2f5 !important;
 }
 </style>
