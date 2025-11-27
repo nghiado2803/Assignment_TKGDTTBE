@@ -1,6 +1,6 @@
 <template>
   <div class="min-vh-100 position-relative overflow-hidden"
-       style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+   style="background: #f0f2f5;">
 
     <!-- Blob trang trí -->
     <div class="position-absolute top-50 start-50 translate-middle blob"></div>
@@ -92,7 +92,7 @@
         </div>
       </div>
     </div>
-    <p class="text-center text-white mt-4 opacity-75 small">
+    <p class="text-center text-black mt-4 opacity-75 small">
             © 2025 Blog Của Tôi • Made with Đỗ Văn Nghĩa ❤️
           </p>
   </div>
