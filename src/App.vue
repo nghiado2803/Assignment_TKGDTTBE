@@ -39,7 +39,7 @@ const currentUser = computed(() =>
 // === CUNG CẤP CHO TOÀN BỘ COMPONENT CON ===
 provide('allData', allData)
 provide('currentUser', currentUser)  // ← Đây là ref reactive thật sự!
-provide('showToast', () => {})       // Im lặng như mày muốn
+provide('showToast', () => {})       
 
 // === Helper: Kiểm tra trang login/register để bỏ padding và background ===
 const isAuthPage = computed(() => 
