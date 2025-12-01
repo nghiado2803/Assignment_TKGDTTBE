@@ -2,7 +2,6 @@
   <div class="min-vh-100 position-relative overflow-hidden"
    style="background: #f0f2f5;">
 
-    <!-- Blob trang trí -->
     <div class="position-absolute top-50 start-50 translate-middle blob"></div>
     <div class="position-absolute bottom-0 end-0 blob-lg"></div>
 
@@ -10,10 +9,8 @@
       <div class="row justify-content-center">
         <div class="col-lg-6 col-xl-5">
 
-          <!-- CARD NỀN TRẮNG CHUẨN FACEBOOK -->
           <div class="card border-0 rounded-4 shadow-lg fb-card">
 
-            <!-- Header: Avatar + tên -->
             <div class="card-header bg-transparent border-0 p-4 pb-3">
               <div class="d-flex align-items-center gap-3">
                 <img :src="currentUser?.avatar || 'https://placehold.co/56x56?text=U'"
@@ -29,21 +26,18 @@
             <div class="card-body p-4 pt-0">
               <form @submit.prevent="handleSubmit">
 
-                <!-- Tiêu đề -->
                 <input v-model="form.title"
                        type="text"
                        class="form-control fs-3 fw-bold border-0 shadow-none mb-3"
                        placeholder="Tiêu đề bài viết..."
                        required />
 
-                <!-- Nội dung -->
                 <textarea v-model="form.content"
                           rows="6"
                           class="form-control fs-5 border-0 shadow-none resize-none mb-4"
                           placeholder="Bạn đang nghĩ gì thế?"
                           required></textarea>
 
-                <!-- Xem trước ảnh -->
                 <div v-if="previewImage" class="mb-4 rounded-4 overflow-hidden shadow">
                   <div class="position-relative">
                     <img :src="previewImage" class="w-100" style="max-height: 500px; object-fit: cover;">
@@ -54,8 +48,6 @@
                   </div>
                 </div>
 
-                <!-- Nút thêm ảnh -->
-          <!-- NÚT THÊM ẢNH/VIDEO – GÓC TRÁI, ICON XANH CHUẨN FACEBOOK -->
                 <div class="d-flex align-items-center mt-4 pt-3 border-top border-light">
                   <label for="file-upload" class="d-flex align-items-center gap-3 text-dark fw-medium hover-lift" style="cursor: pointer;">
                     <i class="bi bi-image fs-3 text-success"></i>
@@ -73,7 +65,6 @@
 
                 <hr class="my-4">
 
-                <!-- Nút Đăng + Hủy -->
                 <div class="d-flex gap-3">
                   <button @click.prevent="handleCancel"
                           class="btn btn-outline-secondary flex-fill rounded-pill py-3">
@@ -100,7 +91,6 @@
 </template>
 
 <script setup lang="ts">
-// GIỮ NGUYÊN 100% JS CỦA MÀY – TAO KHÔNG ĐỘNG GÌ HẾT
 import { ref, inject, computed, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -145,15 +135,41 @@ async function handleSubmit() {
   isLoading.value = true
   await new Promise(r => setTimeout(r, 1000))
 
-  allData.value.push({
+  const newPostId = Math.random().toString(36).substr(2, 9)
+
+  // 1. Tạo bài viết mới
+  const newPost = {
     type: 'post',
-    __backendId: Math.random().toString(36).substr(2, 9),
+    __backendId: newPostId,
     title: form.value.title.trim(),
     content: form.value.content.trim(),
     image: form.value.image || '',
     authorId: currentUser.__backendId,
     createdAt: new Date().toISOString()
-  })
+  }
+
+  allData.value.push(newPost)
+
+  // 2. LOGIC THÔNG BÁO: Gửi cho tất cả bạn bè
+  if (currentUser.friends && currentUser.friends.length > 0) {
+    currentUser.friends.forEach((friendId: string) => {
+      // Tuyệt đối không gửi cho chính mình (dù logic friends đã loại trừ, check thêm cho chắc)
+      if (friendId !== currentUser.__backendId) {
+        allData.value.push({
+          type: 'notification',
+          __backendId: Math.random().toString(36).substr(2, 9),
+          recipientId: friendId,
+          senderId: currentUser.__backendId,
+          postId: newPostId,
+          
+          content: ' đã đăng một bài viết mới.', 
+          
+          isRead: false,
+          createdAt: new Date().toISOString()
+        })
+      }
+    })
+  }
 
   showToast('Đăng bài thành công!', 'success')
   form.value = { title: '', content: '', image: '' }
